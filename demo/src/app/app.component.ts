@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MusicPlayerService } from 'ngx-soundmanager2';
-
+import {HttpClient} from '@angular/common/http';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,39 +8,40 @@ import { MusicPlayerService } from 'ngx-soundmanager2';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'the ngx-soundmanager2 demo';
+  songs : any;
 
-  songs = [
-    {
-      id: 'one',
-      title: 'Kick It',
-      artist: 'Raised On Zenith',
-      url: 'https://popplers5.bandcamp.com/download/track?enc=mp3-128&fsig=10442536bc89f9881e8da2eb81ecd5fb&id=120877506&stream=1&ts=1502502685.0'
-    },
-    {
-      id: 'two',
-      title: 'How Long',
-      artist: 'Raised On Zenith',
-      url: 'https://popplers5.bandcamp.com/download/track?enc=mp3-128&fsig=468f1ed20aae2aba824fb4e6923ff850&id=470307233&stream=1&ts=1502595994.0'
-    },
-    {
-      id: 'three',
-      title: 'Details and Structures',
-      artist: 'Air This Side of Caution',
-      url: 'http://lukefarran.com/music/AirThisSideOfCaution/NatureWillTurnOnUs/02_Details%26Structures.mp3'
-    },
-    {
-      id: 'four',
-      title: 'Here We Go',
-      artist: 'Air This Side of Caution',
-      url: 'http://lukefarran.com/music/AirThisSideOfCaution/NatureWillTurnOnUs/03_HereWeGo.mp3'
-    },
-    {
-      id: 'five',
-      title: 'Without You',
-      artist: 'The Assembly',
-      url: 'http://lukefarran.com/music/TheAssembly/TheFutureHasBeenSold_LukeMaster/07_WithoutYou.mp3'
-    }
-  ];
+  // songs = [
+  //   {
+  //     id: 'one',
+  //     title: 'Kick It',
+  //     artist: 'Raised On Zenith',
+  //     url: 'https://popplers5.bandcamp.com/download/track?enc=mp3-128&fsig=10442536bc89f9881e8da2eb81ecd5fb&id=120877506&stream=1&ts=1502502685.0'
+  //   },
+  //   {
+  //     id: 'two',
+  //     title: 'How Long',
+  //     artist: 'Raised On Zenith',
+  //     url: 'https://popplers5.bandcamp.com/download/track?enc=mp3-128&fsig=468f1ed20aae2aba824fb4e6923ff850&id=470307233&stream=1&ts=1502595994.0'
+  //   },
+  //   {
+  //     id: 'three',
+  //     title: 'Details and Structures',
+  //     artist: 'Air This Side of Caution',
+  //     url: 'http://lukefarran.com/music/AirThisSideOfCaution/NatureWillTurnOnUs/02_Details%26Structures.mp3'
+  //   },
+  //   {
+  //     id: 'four',
+  //     title: 'Here We Go',
+  //     artist: 'Air This Side of Caution',
+  //     url: 'http://lukefarran.com/music/AirThisSideOfCaution/NatureWillTurnOnUs/03_HereWeGo.mp3'
+  //   },
+  //   {
+  //     id: 'five',
+  //     title: 'Without You',
+  //     artist: 'The Assembly',
+  //     url: 'http://lukefarran.com/music/TheAssembly/TheFutureHasBeenSold_LukeMaster/07_WithoutYou.mp3'
+  //   }
+  // ];
 
   mute: boolean;
 
@@ -56,9 +57,27 @@ export class AppComponent implements OnInit, OnDestroy {
   private _musicPlayerTrackIdSubscription: any;
   private _musicPlayerVolumeSubscription: any;
 
-  constructor(private _musicPlayerService: MusicPlayerService) {}
+  constructor(private _musicPlayerService: MusicPlayerService, private http:HttpClient) {}
 
   ngOnInit() {
+
+   this.http.get("https://audioplayer-ef454.firebaseio.com/Songs.json").
+   subscribe(
+      (data)=>{
+
+        console.log(Object.values(data));
+         // this.candidateData = Object.values(data);
+        this.songs = Object.values(data);
+      },
+      (error)=>{
+        console.log(error);
+      }
+     );
+
+
+
+
+
     // Subscribe for mute changes to update bindings
     this.mute = this._musicPlayerService.getMuteStatus();
     this._musicPlayerMuteSubscription = this._musicPlayerService.musicPlayerMuteEventEmitter

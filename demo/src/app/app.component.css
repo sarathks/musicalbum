@@ -32,3 +32,13 @@
 .playlist {
   padding-bottom: 30px;
 }
+.text-limiter{
+    width: 100%;
+    overflow: hidden;
+}
+
+.arrange-songs{
+  width: 22%;
+    float: left;
+    margin-left: 10%;
+}
